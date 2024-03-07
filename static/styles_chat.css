@@ -1,0 +1,205 @@
+body {
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif; /* Tipografía similar a la de WhatsApp */
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5; /* Color de fondo */
+    color: #fff; /* Color de texto */
+}
+
+#container {
+    display: flex;
+    height: 100vh; /* 100% del alto de la ventana */
+}
+
+/* Estilos para la lista de usuarios conectados */
+#user-list {
+    width: calc(100% / 6); /* Ancho para los usuarios conectados */
+    background-color: #471fca; /* Morado */
+    padding: 50px; /* Espaciado interno */
+    overflow-y: auto; /* Permitir desplazamiento vertical */
+    border-right: 1px solid #fff; /* Borde derecho */
+    display: flex; /* Mostrar como flexbox */
+    flex-direction: column; /* Dirección de la columna */
+    justify-content: flex-start; /* Alineación en la parte superior */
+    align-items: left; /* Centrado horizontal */
+}
+
+/* Estilos para el texto de la user-list */
+#user-list::before {
+    display: block; /* Muestra como bloque */
+    font-weight: bold; /* Texto en negrita */
+    margin-bottom: 10px; /* Margen inferior */
+    font-size: 1.5em; /* Tamaño de fuente igual al de bienvenida */
+}
+
+li {
+    margin-bottom: 5px;
+    font-size: larger;
+}
+
+/* Estilos para los usuarios */
+.user {
+    margin-bottom: 10px; /* Margen inferior */
+}
+
+.user:last-child {
+    margin-bottom: 0; /* Elimina el margen inferior del último usuario */
+}
+
+/* Estilos para el nombre de usuario */
+.username {
+    font-weight: bold; /* Texto en negrita */
+    margin-bottom: 5px; /* Margen inferior */
+}
+
+/* Estilos para el estado de conexión */
+.status {
+    font-size: 14px; /* Tamaño de fuente */
+    color: #fff; /* Color de texto */
+}
+
+#chat {
+    flex: 1; /* El chat ocupa todo el espacio restante */
+    background-color: #1c1c1c; /* Morado */
+    padding: 20px; /* Espaciado interno */
+    overflow-y: auto; /* Permitir desplazamiento vertical */
+}
+
+#messages {
+    max-height: 737px; /* Ajustamos la altura máxima a 500px */
+    overflow-y: auto;
+    padding: 10px;
+}
+
+#message {
+    width: calc(100% - 260px); /* Reducir el ancho del input de mensaje */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    box-sizing: border-box;
+    margin-right: 10px;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    left: 420px; /* Ajustar la posición izquierda */
+    width: calc(100% - 420px); /* Reducir el ancho del footer */
+    background-color: #fff; /* Color de fondo */
+    padding: 10px; /* Espaciado interno */
+    display: flex;
+    justify-content: flex-end; /* Alinear contenido a la derecha */
+    align-items: center;
+    z-index: 100; /* Asegura que esté por encima del contenido */
+}
+
+#footer #send,
+#footer #emoji-btn,
+#footer #image-btn {
+    margin-left: 10px; /* Agregar un margen entre los botones */
+}
+
+
+#send,
+#emoji-btn,
+#image-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: #471fca; /* Morado */
+    color: #fff; /* Color de texto */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#send:hover,
+#emoji-btn:hover,
+#image-btn:hover {
+    background-color: #2d1475; /* Cambio de color de fondo al pasar el mouse */
+}
+
+/* Estilos para el menú de emojis */
+.emoji-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    width: auto;
+    max-width: calc(20px * 9);
+    padding: 10px;
+    z-index: 1;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    bottom: 70px; /* Ajuste la distancia desde la parte inferior */
+    right: 70px;
+}
+
+/* Estilos para los elementos dentro del menú de emojis */
+.emoji-menu a {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Estilos para el botón de emojis */
+#emoji-btn {
+    padding: 10px;
+    border: none;
+    border-radius: 50%;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+#emoji-btn:hover {
+    background-color: #471fca; /* Cambio de color de fondo al pasar el mouse */
+}
+
+#image-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: #fff; /* Color de fondo blanco */
+    color: #000000; /* Color de texto */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#image-btn:hover {
+    background-color: #471fca; /* Cambio de color de fondo al pasar el mouse */
+    color: #fff; /* Color de texto */
+}
+
+/* Estilos adicionales para dispositivos móviles */
+@media only screen and (max-width: 600px) {
+    #user-list {
+        display: none;
+    }
+
+    #container {
+        flex-direction: column-reverse;
+    }
+
+    #chat {
+        padding: 10px;
+    }
+
+    #footer {
+        left: 0;
+        width: 100%;
+    }
+
+    #message {
+        width: calc(100% - 120px);
+        margin-right: 0;
+    }
+
+    #footer #send,
+    #footer #emoji-btn,
+    #footer #image-btn {
+        margin-left: 5px;
+    }
+}

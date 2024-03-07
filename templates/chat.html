@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="../static/styles_chat.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.js"></script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="user-list">
+            <h2>Usuarios Conectados:</h2>
+            <ul id="users"></ul>
+        </div>
+        <div id="chat">
+            <h1 id="welcome-message">Bienvenido al chat, {{ username }}</h1>
+            <div id="messages"></div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <input type="text" id="message" placeholder="Escribe un mensaje...">
+        <button id="send">Enviar</button>
+        <button id="emoji-btn">😀</button>
+        <div class="emoji-menu" id="emoji-menu">
+            <a>😀</a>
+            <a>😃</a>
+            <a>😄</a>
+            <a>😁</a>
+            <a>😆</a>
+            <a>😅</a>
+            <a>😂</a>
+            <a>🤣</a>
+            <a>😊</a>
+            <a>😇</a>
+            <a>🙂</a>
+            <a>🙃</a>
+            <a>😉</a>
+            <a>😌</a>
+            <a>😍</a>
+            <a>🥰</a>
+            <a>😘</a>
+            <a>😗</a>
+            <!-- Agrega más emojis según sea necesario -->
+        </div>
+        <button id="image-btn">Cargar Imagen</button>
+        <input type="file" id="file-input" accept=".jpg, .jpeg, .png" style="display: none;">
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var socket = io.connect("http://192.168.0.11:5000");
+
+            socket.on('update_user_list', function (users) {
+                $('#users').empty();
+                users.forEach(function (user) {
+                    $('#users').append($('<li>').text(user));
+                });
+            });
+
+            var welcomeMessage = $("#welcome-message").text();
+            var username = welcomeMessage.split(", ")[1];
+
+            socket.on('message', function (data) {
+                var time = new Date().toLocaleTimeString();
+                var messageWithTime = '[' + time + '] ' + data;
+                $('#messages').append($('<p>').html(messageWithTime));
+            });
+
+            socket.on('image', function (imageData) {
+                console.log("Received image data:", imageData); // Agregar esta línea para depuración
+                var image = $('<img>').attr('src', imageData).css({ 'width': '9200px', 'height': '1080px' });
+                $('#messages').append(image);
+            });
+
+            $('#send').on('click', function () {
+                sendMessage();
+            });
+
+            $('#message').keypress(function (event) {
+                if (event.keyCode === 13) {
+                    sendMessage();
+                }
+            });
+
+            $('#emoji-btn').click(function () {
+                $('#emoji-menu').toggle();
+            });
+
+            $('#footer').on('click', '.emoji-menu a', function () {
+                $('#message').val($('#message').val() + $(this).text());
+                $('#emoji-menu').css('display', 'none');
+            });
+
+            $('#image-btn').click(function () {
+                $('#file-input').click();
+            });
+
+            $('#file-input').change(function () {
+                var file = this.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var image = new Image();
+                    image.src = e.target.result;
+                    image.onload = function () {
+                        var canvas = document.createElement('canvas');
+                        var context = canvas.getContext('2d');
+
+                        canvas.width = 200;
+                        canvas.height = 200;
+
+                        context.drawImage(image, 0, 0, 200, 200);
+
+                        var imageData = canvas.toDataURL('image/jpeg', 0.7);
+
+                        // Enviar el mensaje y la imagen juntos
+                        socket.send(username + ':');
+                        socket.emit('image', imageData);
+                    };
+                };
+
+                reader.readAsDataURL(file);
+            });
+
+            function sendMessage() {
+                var message = $('#message').val();
+                var time = new Date().toLocaleTimeString();
+                socket.send(username + ': ' + message);
+                $('#message').val('');
+            }
+        });
+    </script>
+</body>
+
+</html>
